@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Generate AI images from text with multiple art styles">
+    <meta name="keywords" content="AI, text to image, art generator, AI art, image generation">
+    <title>AI Image Generator | Text to Image</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-robot"></i>
+                <span>AI<span class="gradient-text">Art</span>Generator</span>
+            </div>
+            <div class="nav-links">
+                <a href="#home" class="nav-link active"><i class="fas fa-home"></i> Home</a>
+                <a href="#generate" class="nav-link"><i class="fas fa-magic"></i> Generate</a>
+                <a href="#gallery" class="nav-link"><i class="fas fa-images"></i> Gallery</a>
+                <a href="#styles" class="nav-link"><i class="fas fa-palette"></i> Styles</a>
+                <button class="btn-login"><i class="fas fa-user"></i> Sign In</button>
+            </div>
+            <button class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Turn Your <span class="gradient-text">Imagination</span> Into Art
+                </h1>
+                <p class="hero-subtitle">
+                    Create stunning AI-generated images from text descriptions. Choose from multiple art styles including realistic, anime, fantasy, and more.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#generate" class="btn-primary">
+                        <i class="fas fa-wand-magic-sparkles"></i> Start Creating
+                    </a>
+                    <a href="#styles" class="btn-secondary">
+                        <i class="fas fa-palette"></i> View Styles
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <i class="fas fa-image"></i>
+                        <span>10,000+ Images Generated</span>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-bolt"></i>
+                        <span>Fast Generation</span>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-star"></i>
+                        <span>6 Art Styles</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-preview">
+                <div class="preview-card">
+                    <img src="https://images.unsplash.com/photo-1682687982502-1529b3b33f85?q=80&w=2070" alt="AI Generated Art Preview" class="preview-image">
+                    <div class="preview-badge">
+                        <i class="fas fa-bolt"></i> Generated in 45s
+                    </div>
+                    <div class="preview-info">
+                        <p>"A majestic dragon flying over ancient mountains"</p>
+                        <span class="style-tag">Fantasy Style</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Generator Section -->
+    <section id="generate" class="generator-section">
+        <div class="container">
+            <div class="section-header">
+                <h2><i class="fas fa-magic"></i> Generate Your Art</h2>
+                <p>Describe what you want to create and watch AI bring it to life</p>
+            </div>
+            
+            <div class="generator-container">
+                <div class="generator-sidebar">
+                    <!-- Prompt Input -->
+                    <div class="input-group">
+                        <label for="prompt">
+                            <i class="fas fa-keyboard"></i> Describe Your Image
+                        </label>
+                        <div class="input-with-counter">
+                            <textarea 
+                                id="prompt" 
+                                placeholder="Example: A beautiful sunset over mountains with cherry blossom trees, digital art"
+                                rows="4"
+                                maxlength="500"></textarea>
+                            <div class="counter" id="charCounter">0/500</div>
+                        </div>
+                        <div class="prompt-suggestions">
+                            <span>Try these:</span>
+                            <button class="suggestion-btn" data-prompt="A cute cat wearing sunglasses in cartoon style">Cat cartoon</button>
+                            <button class="suggestion-btn" data-prompt="Cyberpunk cityscape with neon lights and flying cars">Cyberpunk city</button>
+                            <button class="suggestion-btn" data-prompt="Beautiful anime girl with blue hair in cherry blossom garden">Anime girl</button>
+                        </div>
+                    </div>
+
+                    <!-- Style Selection -->
+                    <div class="input-group">
+                        <label><i class="fas fa-palette"></i> Art Style</label>
+                        <div class="style-grid" id="styleGrid">
+                            <!-- Styles will be loaded dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Aspect Ratio -->
+                    <div class="input-group">
+                        <label><i class="fas fa-crop"></i> Aspect Ratio</label>
+                        <div class="ratio-buttons">
+                            <button class="ratio-btn active" data-ratio="1:1">Square (1:1)</button>
+                            <button class="ratio-btn" data-ratio="16:9">Landscape (16:9)</button>
+                            <button class="ratio-btn" data-ratio="9:16">Portrait (9:16)</button>
+                            <button class="ratio-btn" data-ratio="4:3">Classic (4:3)</button>
+                        </div>
+                    </div>
+
+                    <!-- Advanced Options -->
+                    <div class="input-group">
+                        <div class="accordion">
+                            <button class="accordion-header">
+                                <i class="fas fa-sliders"></i> Advanced Options
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="accordion-content">
+                                <div class="form-group">
+                                    <label for="negativePrompt">
+                                        <i class="fas fa-ban"></i> Negative Prompt
+                                    </label>
+                                    <input type="text" id="negativePrompt" 
+                                           placeholder="Things to avoid (optional)">
+                                </div>
+                                <div class="form-group">
+                                    <label for="seed">
+                                        <i class="fas fa-seedling"></i> Seed Number
+                                    </label>
+                                    <input type="number" id="seed" 
+                                           placeholder="Random" min="1" max="999999">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="generator-main">
+                    <!-- Preview Area -->
+                    <div class="preview-area">
+                        <div class="preview-placeholder" id="previewPlaceholder">
+                            <i class="fas fa-image"></i>
+                            <p>Your generated image will appear here</p>
+                            <small>Describe your idea and click Generate</small>
+                        </div>
+                        <div class="preview-result" id="previewResult" style="display: none;">
+                            <img id="generatedImage" src="" alt="Generated Image">
+                            <div class="preview-overlay">
+                                <button class="download-btn" id="downloadBtn">
+                                    <i class="fas fa-download"></i> Download
+                                </button>
+                                <button class="share-btn" id="shareBtn">
+                                    <i class="fas fa-share"></i> Share
+                                </button>
+                                <button class="regenerate-btn" id="regenerateBtn">
+                                    <i class="fas fa-redo"></i> Regenerate
+                                </button>
+                            </div>
+                        </div>
+                        <div class="generation-progress" id="generationProgress" style="display: none;">
+                            <div class="progress-bar">
+                                <div class="progress-fill"></div>
+                            </div>
+                            <div class="progress-text">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <span>AI is creating your image...</span>
+                                <span class="progress-time" id="progressTime">Estimated: 45s</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Generate Button -->
+                    <div class="generate-controls">
+                        <button class="generate-btn" id="generateBtn">
+                            <i class="fas fa-wand-magic-sparkles"></i>
+                            <span>Generate Image</span>
+                            <span class="credits">1 credit</span>
+                        </button>
+                        <button class="generate-batch-btn" id="generateBatchBtn">
+                            <i class="fas fa-layer-group"></i> Generate 4 Variations
+                        </button>
+                    </div>
+
+                    <!-- Recent Generations -->
+                    <div class="recent-generations">
+                        <h4><i class="fas fa-history"></i> Recent Creations</h4>
+                        <div class="recent-grid" id="recentGrid">
+                            <!-- Recent images will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Styles Gallery -->
+    <section id="styles" class="styles-section">
+        <div class="container">
+            <div class="section-header">
+                <h2><i class="fas fa-palette"></i> Available Art Styles</h2>
+                <p>Choose from our collection of AI art styles</p>
+            </div>
+            <div class="styles-grid" id="stylesGrid">
+                <!-- Styles loaded from API -->
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2><i class="fas fa-cogs"></i> How It Works</h2>
+                <p>Create amazing AI art in 3 simple steps</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-icon">
+                        <i class="fas fa-edit"></i>
+                        <div class="step-number">1</div>
+                    </div>
+                    <h3>Describe Your Idea</h3>
+                    <p>Write a detailed description of what you want to create. Be creative!</p>
+                </div>
+                <div class="step">
+                    <div class="step-icon">
+                        <i class="fas fa-palette"></i>
+                        <div class="step-number">2</div>
+                    </div>
+                    <h3>Choose Style & Settings</h3>
+                    <p>Select your favorite art style and adjust aspect ratio.</p>
+                </div>
+                <div class="step">
+                    <div class="step-icon">
+                        <i class="fas fa-robot"></i>
+                        <div class="step-number">3</div>
+                    </div>
+                    <h3>Generate & Download</h3>
+                    <p>Let AI create your artwork and download high-quality images.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="gallery-section">
+        <div class="container">
+            <div class="section-header">
+                <h2><i class="fas fa-images"></i> Community Gallery</h2>
+                <p>Discover amazing creations from our community</p>
+            </div>
+            <div class="gallery-filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="realistic">Realistic</button>
+                <button class="filter-btn" data-filter="anime">Anime</button>
+                <button class="filter-btn" data-filter="fantasy">Fantasy</button>
+                <button class="filter-btn" data-filter="cyberpunk">Cyberpunk</button>
+            </div>
+            <div class="gallery-grid" id="galleryGrid">
+                <!-- Gallery items will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="brand">
+                        <i class="fas fa-robot"></i>
+                        <span>AI<span class="gradient-text">Art</span>Generator</span>
+                    </div>
+                    <p>Turn your imagination into stunning AI-generated artwork.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-discord"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <div class="link-group">
+                        <h4>Product</h4>
+                        <a href="#generate">Generate</a>
+                        <a href="#styles">Styles</a>
+                        <a href="#gallery">Gallery</a>
+                        <a href="#">Pricing</a>
+                    </div>
+                    <div class="link-group">
+                        <h4>Resources</h4>
+                        <a href="#">Documentation</a>
+                        <a href="#">API</a>
+                        <a href="#">Tutorials</a>
+                        <a href="#">Blog</a>
+                    </div>
+                    <div class="link-group">
+                        <h4>Legal</h4>
+                        <a href="#">Terms of Service</a>
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Content Policy</a>
+                        <a href="#">Cookie Policy</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 AI Art Generator. All rights reserved. Generated images may be used freely under Creative Commons.</p>
+                <div class="footer-stats">
+                    <span><i class="fas fa-bolt"></i> <span id="totalGenerations">0</span> images generated</span>
+                    <span><i class="fas fa-users"></i> <span id="totalUsers">0</span> creators</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3><i class="fas fa-user"></i> Sign In</h3>
+            <p>Sign in to save your creations and access more features</p>
+            <div class="modal-buttons">
+                <button class="btn-google">
+                    <i class="fab fa-google"></i> Continue with Google
+                </button>
+                <button class="btn-github">
+                    <i class="fab fa-github"></i> Continue with GitHub
+                </button>
+                <div class="divider">
+                    <span>or</span>
+                </div>
+                <form id="loginForm">
+                    <input type="email" placeholder="Email" required>
+                    <input type="password" placeholder="Password" required>
+                    <button type="submit" class="btn-primary">Sign In</button>
+                </form>
+                <p class="modal-footer-text">
+                    Don't have an account? <a href="#" class="signup-link">Sign up here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Processing your request...</p>
+        </div>
+    </div>
+
+    <script src="/script.js"></script>
+</body>
+</html>
