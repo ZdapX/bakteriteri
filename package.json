@@ -1,11 +1,14 @@
 {
-  "name": "text-to-image-api",
+  "name": "text-to-image-ai",
   "version": "1.0.0",
-  "description": "API Text to Image menggunakan Supawork AI",
+  "description": "AI Text to Image Generator",
   "main": "api/generate.js",
   "scripts": {
     "start": "node api/generate.js",
-    "dev": "nodemon api/generate.js"
+    "dev": "nodemon api/generate.js",
+    "build": "echo 'No build required for Node.js'",
+    "test": "echo 'No tests yet'",
+    "vercel-build": "npm install"
   },
   "dependencies": {
     "axios": "^1.6.0",
@@ -22,6 +25,6 @@
     "nodemon": "^3.0.1"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.0.0"
   }
 }
