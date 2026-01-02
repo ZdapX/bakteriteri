@@ -4,6 +4,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const path = require('path');
+const fs = require('fs'); // Ditambahkan untuk pengecekan file
 const SupaworkAI = require('../lib/supawork.js');
 const { 
   generateImageLimiter, 
@@ -42,13 +43,12 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(morgan('combined'));
 
-// Serve static files
-app.use(express.static(path.join(__dirname, '../public')));
+// Middleware untuk serve static files di development
+if (process.env.NODE_ENV !== 'production') {
+  app.use(express.static(path.join(__dirname, '../public')));
+}
 
-// Root route - serve frontend
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/index.html'));
-});
+// API Routes harus didefinisikan SEBELUM catch-all route
 
 // Health Check Endpoint
 app.get('/health', apiLimiter, (req, res) => {
@@ -253,7 +253,7 @@ app.post('/api/generate', generateImageLimiter, async (req, res) => {
         meta: {
           processing_time: `${(processingTime / 1000).toFixed(2)}s`,
           credits_used: 1,
-          cache_key: `image_${Buffer.from(prompt).toString('base64').substring(0, 32)}`
+          cache_key: `image_${Buffer.from(prompt).toString('base64').substr(0, 32)}`
         }
       });
     } else {
@@ -784,10 +784,28 @@ app.use('/api/*', (req, res) => {
   });
 });
 
-// 404 handler untuk semua route lainnya (fallback ke frontend)
-app.use('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/index.html'));
-});
+// HANYA di development, kita serve static files dari Express
+if (process.env.NODE_ENV !== 'production') {
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/index.html'));
+  });
+  
+  app.get('*', (req, res) => {
+    // Coba serve file static
+    const filePath = path.join(__dirname, '../public', req.path);
+    if (fs.existsSync(filePath) && !req.path.startsWith('/api/')) {
+      res.sendFile(filePath);
+    } else {
+      // Fallback ke index.html untuk SPA
+      res.sendFile(path.join(__dirname, '../public/index.html'));
+    }
+  });
+} else {
+  // Di production, fallback ke frontend SPA
+  app.use('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/index.html'));
+  });
+}
 
 // Graceful shutdown handler
 process.on('SIGTERM', () => {
@@ -812,6 +830,7 @@ process.on('unhandledRejection', (reason, promise) => {
 // Start server untuk development lokal
 if (require.main === module) {
   const PORT = process.env.PORT || 3000;
+  const API_BASE_URL = process.env.API_BASE_URL || `http://localhost:${PORT}`;
   
   // Cek environment variables
   console.log('[API] Environment:', process.env.NODE_ENV || 'development');
